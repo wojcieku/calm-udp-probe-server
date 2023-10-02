@@ -8,20 +8,19 @@ import (
 )
 
 const (
-	SERVER_HOST = "127.0.0.1"
-	SERVER_PORT = "1501"
+	SERVER_PORT = ":1501"
 	SERVER_TYPE = "udp"
 )
 
 func main() {
 	fmt.Println("Server Running...")
-	server, err := net.ListenPacket(SERVER_TYPE, SERVER_HOST+":"+SERVER_PORT)
+	server, err := net.ListenPacket(SERVER_TYPE, SERVER_PORT)
 	if err != nil {
 		fmt.Println("Error listening:", err.Error())
 		os.Exit(1)
 	}
 	defer server.Close()
-	fmt.Println("Listening on " + SERVER_HOST + ":" + SERVER_PORT)
+	fmt.Println("Listening on " + SERVER_PORT)
 	fmt.Println("Waiting for client...")
 
 	for {
