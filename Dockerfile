@@ -15,6 +15,7 @@ COPY --from=build-stage /latencyServer /latencyServer
 RUN apk add -U tzdata
 ENV TZ=Europe/Sarajevo
 RUN cp /usr/share/zoneinfo/Europe/Sarajevo /etc/localtime
+ENV PORT=1501
 
-ENTRYPOINT ["/latencyServer", "-port"]
+ENTRYPOINT ["/bin/sh", "-c","./latencyServer -port $PORT"]
 
