@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	log "github.com/sirupsen/logrus"
 	"net"
 	"os"
 	"strconv"
@@ -16,15 +16,15 @@ const (
 func startServer(serverPort int) {
 	address := ":" + strconv.Itoa(serverPort)
 
-	fmt.Println("Starting server...")
+	log.Info("Starting server...")
 	server, err := net.ListenPacket(SERVER_TYPE, address)
 	if err != nil {
-		fmt.Println("Error listening:", err.Error())
+		log.Error("Error listening:", err.Error())
 		os.Exit(1)
 	}
 	defer server.Close()
-	fmt.Println("Listening on " + address)
-	fmt.Println("Waiting for client...")
+	log.Info("Listening on " + address)
+	log.Info("Waiting for client...")
 
 	for {
 		buf := make([]byte, 50)
@@ -37,17 +37,11 @@ func startServer(serverPort int) {
 }
 
 func response(udpServer net.PacketConn, addr net.Addr, buf []byte) {
-	//time.Sleep(time.Duration(rand.Intn(2)) * time.Millisecond)
-	//flag := rand.Intn(7)
-	//if flag == 1 {
-	//	return
-	//}
 	currentTime := time.Now().Format(time.StampMilli)
 
 	responseStr := string(buf) + ";" + currentTime
 	responseStr = strings.ReplaceAll(responseStr, "\x00", "")
-	//TODO clear unnecessary logs
-	fmt.Println("Received a message with timestamp, replying:", responseStr)
+	log.Debug("Received a message with timestamp, replying:", responseStr)
 
 	udpServer.WriteTo([]byte(responseStr), addr)
 }
